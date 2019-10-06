@@ -1,12 +1,11 @@
-import * as express from 'express';
-import * as cors from 'cors';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
-import { useExpressServer, useContainer } from 'routing-controllers';
-import * as path from 'path';
-import * as health from 'express-ping';
-import * as helmet from 'helmet';
-import { Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express, { Request, Response } from 'express';
+import health from 'express-ping';
+import helmet from 'helmet';
+import path from 'path';
+import { useContainer, useExpressServer } from 'routing-controllers';
 import { Container } from 'typedi';
 
 export class ExpressConfig {
@@ -24,7 +23,7 @@ export class ExpressConfig {
   }
 
   public setUpControllers() {
-    const controllersPath = path.resolve('dist', 'service-layer/controllers');
+    const controllersPath = path.resolve('dist', 'controllers');
     useContainer(Container);
     useExpressServer(this.app, {
       controllers: [controllersPath + '/*.js'],
