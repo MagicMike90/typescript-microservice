@@ -1,16 +1,22 @@
+import path from 'path';
 import winston from 'winston';
 
-const { combine, timestamp, prettyPrint, json } = winston.format;
+const { format, transports } = winston;
+const { combine, label, timestamp, prettyPrint, json, colorize, metadata } = format;
+
 export const logger = winston.createLogger({
-  level: 'info',
-  format: combine(timestamp(), prettyPrint(), json()),
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: combine(
+    label({ label: path.basename(process.mainModule.filename) }),
+    timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    prettyPrint(),
+    json(),
+    colorize(),
+    metadata({ fillExcept: ['message', 'level', 'timestamp', 'label'] }),
+  ),
   transports: [
-    //
-    // - Write to all logs with level `info` and below to `combined.log`
-    // - Write all logs error (and below) to `error.log`.
-    //
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
+    new transports.File({ filename: 'error.log', level: 'error' }),
+    new transports.File({ filename: 'combined.log' }),
   ],
 });
 
@@ -20,8 +26,8 @@ export const logger = winston.createLogger({
 //
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
+    new transports.Console({
+      format: format.simple(),
     }),
   );
 }

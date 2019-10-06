@@ -1,10 +1,10 @@
 import { Controller, Get } from 'routing-controllers';
 
-@Controller("/hello-world")
+@Controller('/hello-world')
 export class HelloWorld {
   constructor() {}
-  @Get("/")
+  @Get('/')
   public async get(): Promise<any> {
-    return { msg: "This is first Typescript Microservice" };
+    return { msg: 'This is first Typescript Microservice' };
   }
 }
